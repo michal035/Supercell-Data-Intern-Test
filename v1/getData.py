@@ -18,22 +18,21 @@ with sqlite3.connect(DB) as conn:
         conn.commit()
 
         result = cursor.fetchall()
-        print(result)
 
-    # Highest peak of users
+    def DAU() -> list:
 
-    def DAU() -> None:
-
+        #ORDER BY count(account_id) DESC
         cursor.execute('''SELECT date, count(account_id)  FROM account_date_session 
                     GROUP BY date 
-                    ORDER BY count(account_id) DESC
-                    LIMIT 10;
+                    ORDER BY date DESC
+                    ;
                     ''')
         conn.commit()
 
         result = cursor.fetchall()
-        print(result)
-
+        
+        return result
+    
     # Sales thing
 
     def geographic_split_of_revenue() -> None:
@@ -70,4 +69,4 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
         print(result)
 
-geographic_split_of_time()
+
