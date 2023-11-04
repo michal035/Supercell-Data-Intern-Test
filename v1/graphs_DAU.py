@@ -58,9 +58,6 @@ def DAU_month(desired_month) -> None:
     plt.show()
 
 
-# DAU_month(12)
-
-
 def DAU_month2(desired_month) -> None:
 
     res = getData.DAU()
@@ -89,15 +86,10 @@ def DAU_month2(desired_month) -> None:
     plt.show()
     # plt.savefig(f"v1/graphs/DAU_months/{calendar.month_name[desired_month]}.png")
 
-# DAU_month2(6)
-
 
 def get_all_months() -> None:
     for i in range(12):
         DAU_month2(i+1)
-
-# DAU_plot()
-# get_all_months()
 
 
 def DAU_plot_6months() -> None:
@@ -132,7 +124,7 @@ def DAU_plot_6months() -> None:
 # DAU_plot_6months()
 
 
-def DAU_month2(desired_month,desired_month_end) -> None:
+def DAU_month2(desired_month, desired_month_end) -> None:
 
     months = [i for i in range(desired_month, desired_month_end + 1)]
 
@@ -159,7 +151,6 @@ def DAU_month2(desired_month,desired_month_end) -> None:
     plt.xlabel("Date")
     plt.ylabel("Users")
 
-    plt.savefig(f"v1/graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
+    plt.savefig(
+        f"v1/graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
     plt.show()
-
-DAU_month2(8,12)

@@ -35,7 +35,7 @@ with sqlite3.connect(DB) as conn:
     
     # Sales thing
 
-    def geographic_split_of_revenue() -> None:
+    def geographic_split_of_revenue() -> list:
         cursor.execute('''select acc.country_code, sum(pur.iap_price_usd_cents) AS total_by_country  from iap_purchase pur
                         join account acc on acc.account_id = pur.account_id
                         group by acc.country_code
@@ -43,7 +43,22 @@ with sqlite3.connect(DB) as conn:
         conn.commit()
 
         result = cursor.fetchall()
-        print(result)
+
+        return result
+    
+
+    def average_per_country() -> list:
+        cursor.execute('''select acc.country_code, avg(pur.iap_price_usd_cents) AS total_by_country  from iap_purchase pur
+                        join account acc on acc.account_id = pur.account_id
+                        group by acc.country_code
+                       ''')
+        conn.commit()
+
+        result = cursor.fetchall()
+
+        return result
+        
+
 
     def geographic_split_of_users() -> None:
         cursor.execute('''select acc.country_code, count(acc.account_id) AS total_by_country  from iap_purchase pur
@@ -68,5 +83,7 @@ with sqlite3.connect(DB) as conn:
 
         result = cursor.fetchall()
         print(result)
+
+    
 
 
