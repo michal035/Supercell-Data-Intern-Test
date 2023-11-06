@@ -15,20 +15,25 @@ def DAU_plot() -> None:
     df["Date"] = pd.to_datetime(df["Date"])
 
     sns.set(style="darkgrid")
-    plt.figure(figsize=(12, 6))
-    sns.lineplot(data=df, x="Date", y="Users")
+    plt.figure(figsize=(14, 7))
+    ax = sns.lineplot(data=df, x="Date", y="Users")
 
     plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
 
     plt.xticks(rotation=45)
 
-    plt.title("Time Series Plot of Users over Dates")
-    plt.xlabel("Date")
-    plt.ylabel("Users")
+    #plt.title("Daily active users over 2016")
+    ax.set_title('Daily active users over 2016', fontsize=17)
+    #plt.xlabel("Date", fontsize=12, labelpad=50)
+    #plt.ylabel("Users", fontsize=12, labelpad=10)
 
-    plt.savefig(f"v1/graphs/whole_year.png")
+    ax.set_ylabel('Users', fontsize=14, labelpad=15) 
+
+    #plt.savefig(f"v1/graphs/whole_year.png")
     plt.show()
+
+DAU_plot()
 
 
 def DAU_month(desired_month) -> None:
@@ -58,6 +63,7 @@ def DAU_month(desired_month) -> None:
     plt.show()
 
 
+
 def DAU_month2(desired_month) -> None:
 
     res = getData.DAU()
@@ -68,20 +74,29 @@ def DAU_month2(desired_month) -> None:
 
     # fig, ax = plt.subplots(figsize=(12, 6))
     sns.set(style="darkgrid")
-    sns.lineplot(data=df_filtered, x="Date", y="Users")
+    ax = sns.lineplot(data=df_filtered, x="Date", y="Users")
 
     plt.xticks(rotation=45)
 
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
     plt.gca().xaxis.set_major_formatter(
-        mdates.DateFormatter("%Y-%m-%d\n%A"))  # ("%Y-%m-%d\n%A")
+        mdates.DateFormatter("%A"))  # ("%Y-%m-%d\n%A")
 
     # plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
 
+
+    ax.set_title(f"Time Series Plot of Users over {calendar.month_name[desired_month]}", fontsize=17)
+
+    ax.set_ylabel('Users', fontsize=14, labelpad=15) 
+
+
+    """
     plt.title(
         f"Time Series Plot of Users over {calendar.month_name[desired_month]}")
     plt.xlabel("Date")
     plt.ylabel("Users")
+    """
+
 
     plt.show()
     # plt.savefig(f"v1/graphs/DAU_months/{calendar.month_name[desired_month]}.png")
@@ -136,21 +151,36 @@ def DAU_month2(desired_month, desired_month_end) -> None:
 
     # fig, ax = plt.subplots(figsize=(12, 6))
     sns.set(style="darkgrid")
-    sns.lineplot(data=df_filtered, x="Date", y="Users")
+    plt.figure(figsize=(14, 7))
+    ax =sns.lineplot(data=df_filtered, x="Date", y="Users")
 
-    plt.xticks(rotation=45)
+    #plt.xticks(rotation=45)
+    plt.xticks(plt.xticks(rotation=45)[0][2:])
 
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-    plt.gca().xaxis.set_major_formatter(
-        mdates.DateFormatter("%Y-%m-%d\n%A"))  # ("%Y-%m-%d\n%A")
+
+    locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
+    formatter = mdates.DateFormatter('%A')
+    plt.gca().xaxis.set_major_locator(locator)
+    plt.gca().xaxis.set_major_formatter(formatter)
+
+    # Skipping the first two labels
 
     # plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
 
-    plt.title(
-        f"Time Series Plot of Users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}")
-    plt.xlabel("Date")
-    plt.ylabel("Users")
+    #plt.title(
+    #    f"Time Series Plot of Users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}")
+   
+    ax.set_title(f"Daily active users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}", fontsize=17)
+
+    ax.set_ylabel('Users', fontsize=14, labelpad=15) 
+    ax.set_xlabel("")
+    #plt.xlabel("Date")
+    #plt.ylabel("Users")
 
     plt.savefig(
-        f"v1/graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
+       f"v1/graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
     plt.show()
+
+
+
+#DAU_month2(4,5)

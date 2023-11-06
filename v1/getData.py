@@ -84,6 +84,23 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
         print(result)
 
+
+
+    def DAU_by_country(country_code) -> list:
+        cursor.execute(f"""SELECT s.date, count(s.account_id)  FROM account_date_session s
+                join account a on s.account_id = a.account_id
+                where a.country_code = '{country_code}'
+                    GROUP BY s.date 
+                    ORDER BY s.date DESC
+                    ;
+         
+                       """)
+        conn.commit()
+
+        result = cursor.fetchall()
+
+        return result
+
     
 
 
