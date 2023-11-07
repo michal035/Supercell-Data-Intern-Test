@@ -1,7 +1,7 @@
 import sqlite3
 
 
-DB = 'v1/sample.sqlite'
+DB = 'sample.sqlite'
 
 with sqlite3.connect(DB) as conn:
 
@@ -36,7 +36,7 @@ with sqlite3.connect(DB) as conn:
     # Sales thing
 
     def geographic_split_of_revenue() -> list:
-        cursor.execute('''select acc.country_code, sum(pur.iap_price_usd_cents) AS total_by_country  from iap_purchase pur
+        cursor.execute('''select acc.country_code, (sum(pur.iap_price_usd_cents)/100) AS total_by_country from iap_purchase pur
                         join account acc on acc.account_id = pur.account_id
                         group by acc.country_code
                        ''')
@@ -47,29 +47,39 @@ with sqlite3.connect(DB) as conn:
         return result
     
 
+    # This could / and should be resolved with simple right join - > for some reason it was taking super long for sqlite
+    # to make querry with right or left joins
     def average_per_country() -> list:
-        cursor.execute('''select acc.country_code, avg(pur.iap_price_usd_cents) AS total_by_country  from iap_purchase pur
+
+        cursor.execute('''select country_code, count(distinct(account_id)) from account
+                            group by country_code
+                            order by country_code ASC;
+                       ''')
+        conn.commit()
+        player_count = cursor.fetchall()
+
+        cursor.execute('''select acc.country_code, sum(pur.iap_price_usd_cents) AS total_by_country  from iap_purchase pur
                         join account acc on acc.account_id = pur.account_id
                         group by acc.country_code
+                       order by acc.country_code ASC;
                        ''')
         conn.commit()
 
-        result = cursor.fetchall()
+        purchases_sum = cursor.fetchall()
 
-        return result
-        
+        return player_count,  purchases_sum
 
 
     def geographic_split_of_users() -> None:
-        cursor.execute('''select acc.country_code, count(acc.account_id) AS total_by_country  from iap_purchase pur
-                        join account acc on acc.account_id = pur.account_id
-                        group by acc.country_code;
-                       ''')
+        cursor.execute('''select country_code, count(account_id) AS total_by_country  from account
+                        group by country_code
+                        order by count(account_id) DESC;
+                        
+                        ''')
         conn.commit()
 
         result = cursor.fetchall()
-        print(result)
-
+        
     def geographic_split_of_time() -> None:
 
         cursor.execute('''select acc.country_code, sum(pur.session_duration_sec) AS total_by_country  from account_date_session pur
@@ -100,7 +110,30 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
-
     
 
+    def DAU_by_country_by_date(country_code) -> list:
+        cursor.execute(f"""SELECT s.date, count(s.account_id)  FROM account_date_session s
+                join account a on s.account_id = a.account_id
+                where a.country_code = '{country_code}'
+                    GROUP BY s.date 
+                    ORDER BY s.date DESC
+                    ;
+         
+                       """)
+        conn.commit()
+
+        result = cursor.fetchall()
+
+        return result
+
+
+    def country_codes() -> None:
+        cursor.execute('''select distinct(country_code) from account;''')
+        conn.commit()
+
+        result = cursor.fetchall()
+
+        return result
+    
 

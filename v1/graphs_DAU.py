@@ -33,7 +33,6 @@ def DAU_plot() -> None:
     #plt.savefig(f"v1/graphs/whole_year.png")
     plt.show()
 
-DAU_plot()
 
 
 def DAU_month(desired_month) -> None:
@@ -150,18 +149,22 @@ def DAU_month2(desired_month, desired_month_end) -> None:
     df_filtered = df[df["Date"].dt.month.isin(months)]
 
     # fig, ax = plt.subplots(figsize=(12, 6))
-    sns.set(style="darkgrid")
+    sns.set(style="whitegrid")
     plt.figure(figsize=(14, 7))
     ax =sns.lineplot(data=df_filtered, x="Date", y="Users")
 
-    #plt.xticks(rotation=45)
-    plt.xticks(plt.xticks(rotation=45)[0][2:])
+    plt.xticks(rotation=45)
+    #plt.xticks(plt.xticks(rotation=45)[0][2:])
+
+    plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
 
 
+    """
     locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
-    formatter = mdates.DateFormatter('%A')
+    formatter = mdates.DateFormatter('%Y-%m')
     plt.gca().xaxis.set_major_locator(locator)
-    plt.gca().xaxis.set_major_formatter(formatter)
+    plt.gca().xaxis.set_major_formatter(formatter)"""
 
     # Skipping the first two labels
 
@@ -183,4 +186,4 @@ def DAU_month2(desired_month, desired_month_end) -> None:
 
 
 
-#DAU_month2(4,5)
+DAU_month2(6,9)
