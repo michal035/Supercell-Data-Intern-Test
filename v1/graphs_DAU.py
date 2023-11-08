@@ -14,8 +14,8 @@ def DAU_plot() -> None:
 
     df["Date"] = pd.to_datetime(df["Date"])
 
-    sns.set(style="darkgrid")
-    plt.figure(figsize=(14, 7))
+    sns.set(style="whitegrid")
+    plt.figure(figsize=(16, 8))
     ax = sns.lineplot(data=df, x="Date", y="Users")
 
     plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
@@ -24,13 +24,13 @@ def DAU_plot() -> None:
     plt.xticks(rotation=45)
 
     #plt.title("Daily active users over 2016")
-    ax.set_title('Daily active users over 2016', fontsize=17)
+    ax.set_title('Daily Active Users through 2016', fontsize=17)
     #plt.xlabel("Date", fontsize=12, labelpad=50)
     #plt.ylabel("Users", fontsize=12, labelpad=10)
 
     ax.set_ylabel('Users', fontsize=14, labelpad=15) 
-
-    #plt.savefig(f"v1/graphs/whole_year.png")
+    ax.set_xlabel('')
+    #plt.savefig(f"graphs/whole_year.png")
     plt.show()
 
 
@@ -150,21 +150,19 @@ def DAU_month2(desired_month, desired_month_end) -> None:
 
     # fig, ax = plt.subplots(figsize=(12, 6))
     sns.set(style="whitegrid")
-    plt.figure(figsize=(14, 7))
-    ax =sns.lineplot(data=df_filtered, x="Date", y="Users")
+    plt.figure(figsize=(16, 8))
+    ax =sns.lineplot(data=df_filtered, x="", y="Users")
 
     plt.xticks(rotation=45)
-    #plt.xticks(plt.xticks(rotation=45)[0][2:])
+    plt.xticks(plt.xticks(rotation=45)[0][2:])
 
     plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
-
-
-    """
-    locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
-    formatter = mdates.DateFormatter('%Y-%m')
-    plt.gca().xaxis.set_major_locator(locator)
-    plt.gca().xaxis.set_major_formatter(formatter)"""
+    
+    #locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
+    #formatter = mdates.DateFormatter('%A')
+    #plt.gca().xaxis.set_major_locator(locator)
+    #plt.gca().xaxis.set_major_formatter(formatter)
 
     # Skipping the first two labels
 
@@ -172,18 +170,18 @@ def DAU_month2(desired_month, desired_month_end) -> None:
 
     #plt.title(
     #    f"Time Series Plot of Users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}")
-   
-    ax.set_title(f"Daily active users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}", fontsize=17)
+    ax.set_title(f"Daily Active Users {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}", fontsize=17)
+    
+    """
 
     ax.set_ylabel('Users', fontsize=14, labelpad=15) 
-    ax.set_xlabel("")
+    ax.set_xlabel("Weekdays marking pattern occurrence")"""
     #plt.xlabel("Date")
     #plt.ylabel("Users")
 
     plt.savefig(
-       f"v1/graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
+       f"graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
     plt.show()
 
-
-
 DAU_month2(6,9)
+

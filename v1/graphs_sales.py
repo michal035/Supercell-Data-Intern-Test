@@ -28,8 +28,8 @@ def sales_by_country():
 
     plt.figure(figsize=(16, 8))
     sns.barplot(x="Country", y="Revenue (USD)", data=df, hue="Color",
-                dodge=False, palette=["#900C3F", "#8d435c"], legend=False)
-    plt.title("Revenue Split across Markets", fontsize=17)
+                dodge=False, palette="Reds", legend=False)
+    plt.title("Revenue Split across Markets (USD)", fontsize=17)
     plt.xlabel("Country Codes", fontsize=14)
     plt.ylabel("Revenue (USD)", fontsize=14)
     plt.xticks(rotation=45, fontsize=12)
@@ -46,6 +46,9 @@ def sales_by_country():
     plt.savefig(f"graphs/Sales/revenue_split.png")
 
     plt.show()
+
+
+sales_by_country()
 
 
 def convert_to_iso_a3(country_code):
@@ -75,9 +78,9 @@ def Sales_by_country_map():
     df_country_codes['Revenue (USD)'] = 0.25
     df = df.combine_first(df_country_codes)"""
 
-    cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
+    #cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
     #Oranges, OrRD
-    #cmap = "PuRd"
+    cmap = "Reds"
     # colors = [ 'indianred', 'darkred']
     # cmap = ListedColormap(colors)
 
@@ -86,10 +89,12 @@ def Sales_by_country_map():
 
     # merge.loc[merge['Revenue (USD)'] == 0.25, 'color'] = 'grey'
 
-    plt.title('Random Data for Different Countries', fontsize=17)
-
+    plt.title('Revenue split accros Markets (USD)', fontsize=17)
+    
     #plt.savefig(f"graphs/Sales/revenue_split_map.png")
     plt.show()
+
+
 
 
 def average_per_user_per_country_map():
@@ -125,9 +130,39 @@ def average_per_user_per_country_map():
 
 
     plt.title('Revenue per User per Market', fontsize=17)
-
     #plt.savefig(f"graphs/Sales/revenue_per_user_map.png")
     plt.show()
+
+
+
+def average_per_user_per_country():
+    res_count, res_sum = getData.average_per_country()
+    df = pd.DataFrame(res_count, columns=["iso_a3", "Account count"])
+    df2 = pd.DataFrame(res_sum, columns=["iso_a3", "Accounts sum"])
+
+    merged_df = pd.merge(df, df2, on="iso_a3", how="right")
+
+    merged_df = merged_df.fillna(0)
+
+    merged_df["Average"] = round(
+        merged_df["Accounts sum"] / merged_df["Account count"], 2)
+
+
+    plt.figure(figsize=(14, 7))
+    sns.barplot(x="iso_a3", y="Average", data=merged_df, color='moccasin')
+    plt.title("Revenue per User per Country", fontsize=17)
+    plt.xlabel("Countries", fontsize=14)
+    plt.ylabel("Average Revenue per User (USD)", fontsize=14)
+    plt.xticks(rotation=45, fontsize=12)
+    plt.yticks(fontsize=12)
+
+    plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
+
+    plt.grid(axis="y", linestyle="-")
+    #plt.savefig(f"graphs/Sales/average_per_country_per_user_bar_plot.png")
+    plt.show()
+
+
 
 
 def split_of_user_per_country_map():
@@ -174,10 +209,9 @@ def average_per_country():
 
     plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
 
-    plt.grid(axis="y", linestyle="--")
+    plt.grid(axis="y", linestyle="-")
     plt.show()
 
 
-split_of_user_per_country_map()
 
 
