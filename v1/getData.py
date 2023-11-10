@@ -21,7 +21,7 @@ with sqlite3.connect(DB) as conn:
 
     def DAU() -> list:
 
-        #ORDER BY count(account_id) DESC
+        # ORDER BY count(account_id) DESC
         cursor.execute('''SELECT date, count(account_id)  FROM account_date_session 
                     GROUP BY date 
                     ORDER BY date DESC
@@ -30,9 +30,9 @@ with sqlite3.connect(DB) as conn:
         conn.commit()
 
         result = cursor.fetchall()
-        
+
         return result
-    
+
     # Sales thing
 
     def geographic_split_of_revenue() -> list:
@@ -45,10 +45,10 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
-    
 
     # This could / and should be resolved with simple right join - > for some reason it was taking super long for sqlite
     # to make querry with right or left joins
+
     def average_per_country() -> list:
 
         cursor.execute('''select country_code, count(distinct(account_id)) from account
@@ -69,7 +69,6 @@ with sqlite3.connect(DB) as conn:
 
         return player_count,  purchases_sum
 
-
     def geographic_split_of_users() -> None:
         cursor.execute('''select country_code, count(account_id) AS total_by_country  from account
                         group by country_code
@@ -79,7 +78,7 @@ with sqlite3.connect(DB) as conn:
         conn.commit()
 
         result = cursor.fetchall()
-        
+
     def geographic_split_of_time() -> None:
 
         cursor.execute('''select acc.country_code, sum(pur.session_duration_sec) AS total_by_country  from account_date_session pur
@@ -93,8 +92,6 @@ with sqlite3.connect(DB) as conn:
 
         result = cursor.fetchall()
         print(result)
-
-
 
     def DAU_by_country(country_code) -> list:
         cursor.execute(f"""SELECT s.date, count(s.account_id)  FROM account_date_session s
@@ -110,7 +107,6 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
-    
 
     def DAU_by_country_by_date(country_code) -> list:
         cursor.execute(f"""SELECT s.date, count(s.account_id)  FROM account_date_session s
@@ -127,7 +123,6 @@ with sqlite3.connect(DB) as conn:
 
         return result
 
-
     def country_codes() -> None:
         cursor.execute('''select distinct(country_code) from account;''')
         conn.commit()
@@ -135,5 +130,49 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
+
+    def time_sales():
+
+        cursor.execute('''select created_time,sum(iap_price_usd_cents) from iap_purchase
+                group by created_time;''')
+        conn.commit()
+
+        result = cursor.fetchall()
+
+        return result
     
+
+    def get_platform_data():
+        cursor.execute('''SELECT country_code, count(created_platform) from account
+                group by country_code''')
+        conn.commit()
+
+        all = cursor.fetchall()
+
+        cursor.execute('''SELECT country_code, count(created_platform) from account
+                       where created_platform = 'iOS'
+                group by country_code
+                       
+                       ''')
+        
+        conn.commit()
+        iOS = cursor.fetchall()
+
+
+        cursor.execute('''SELECT country_code, count(created_platform) from account
+                       where created_platform = 'Android'
+                group by country_code
+                       
+                       ''')
+        
+        conn.commit()
+        Android = cursor.fetchall()
+
+
+        return all,iOS,Android
+
+
+     
+
+
 

@@ -28,11 +28,10 @@ def DAU_plot() -> None:
     #plt.xlabel("Date", fontsize=12, labelpad=50)
     #plt.ylabel("Users", fontsize=12, labelpad=10)
 
-    ax.set_ylabel('Users', fontsize=14, labelpad=15) 
+    ax.set_ylabel('Active users', fontsize=14, labelpad=15) 
     ax.set_xlabel('')
-    #plt.savefig(f"graphs/whole_year.png")
+    plt.savefig(f"graphs/DAU/whole_year.png")
     plt.show()
-
 
 
 def DAU_month(desired_month) -> None:
@@ -150,8 +149,8 @@ def DAU_month2(desired_month, desired_month_end) -> None:
 
     # fig, ax = plt.subplots(figsize=(12, 6))
     sns.set(style="whitegrid")
-    plt.figure(figsize=(16, 8))
-    ax =sns.lineplot(data=df_filtered, x="", y="Users")
+    plt.figure(figsize=(16, 9))
+    ax =sns.lineplot(data=df_filtered, x="Date", y="Users")
 
     plt.xticks(rotation=45)
     plt.xticks(plt.xticks(rotation=45)[0][2:])
@@ -159,10 +158,10 @@ def DAU_month2(desired_month, desired_month_end) -> None:
     plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
     
-    #locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
-    #formatter = mdates.DateFormatter('%A')
-    #plt.gca().xaxis.set_major_locator(locator)
-    #plt.gca().xaxis.set_major_formatter(formatter)
+    """locator = mdates.WeekdayLocator(byweekday=(mdates.FR, mdates.SU))
+    formatter = mdates.DateFormatter('%A')
+    plt.gca().xaxis.set_major_locator(locator)
+    plt.gca().xaxis.set_major_formatter(formatter)"""
 
     # Skipping the first two labels
 
@@ -172,16 +171,16 @@ def DAU_month2(desired_month, desired_month_end) -> None:
     #    f"Time Series Plot of Users over {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}")
     ax.set_title(f"Daily Active Users {calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}", fontsize=17)
     
-    """
+ 
 
-    ax.set_ylabel('Users', fontsize=14, labelpad=15) 
-    ax.set_xlabel("Weekdays marking pattern occurrence")"""
+
+    ax.set_ylabel('Active users', fontsize=14, labelpad=15) 
+    #ax.set_xlabel("Weekdays marking pattern occurrence")
     #plt.xlabel("Date")
     #plt.ylabel("Users")
 
-    plt.savefig(
-       f"graphs/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}.png")
+    #plt.savefig(
+    #   f"graphs/DAU/{calendar.month_name[desired_month]} - {calendar.month_name[desired_month_end]}-Weekly-trend.png")
     plt.show()
 
-DAU_month2(6,9)
 

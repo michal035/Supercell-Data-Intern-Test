@@ -43,12 +43,12 @@ def sales_by_country():
 
     # ax.set_ylabel('Users', fontsize=14, labelpad=15)
 
-    plt.savefig(f"graphs/Sales/revenue_split.png")
+    #plt.savefig(f"graphs/Sales/revenue_split.png")
 
     plt.show()
 
 
-sales_by_country()
+
 
 
 def convert_to_iso_a3(country_code):
@@ -124,9 +124,10 @@ def average_per_user_per_country_map():
 
     cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
     #Oranges, OrRD PuRd
-    cmap = "OrRd"
+    cmap = "OrRD"
 
-    merge.plot(column='Average', cmap=cmap, legend=True, ax=ax)
+    vmin, vmax = 0, 150
+    merge.plot(column='Average', cmap=cmap, vmin=vmin, vmax=vmax, legend=False, ax=ax)
 
 
     plt.title('Revenue per User per Market', fontsize=17)
@@ -144,9 +145,14 @@ def average_per_user_per_country():
 
     merged_df = merged_df.fillna(0)
 
+    merged_df["Accounts sum"] = merged_df["Accounts sum"] / 100
     merged_df["Average"] = round(
         merged_df["Accounts sum"] / merged_df["Account count"], 2)
 
+
+        
+    merged_df = merged_df.sort_values("Average")
+    print(merged_df)
 
     plt.figure(figsize=(14, 7))
     sns.barplot(x="iso_a3", y="Average", data=merged_df, color='moccasin')
@@ -214,4 +220,39 @@ def average_per_country():
 
 
 
+def time_sales():
 
+    res = getData.time_sales()
+    
+    df = pd.DataFrame(res, columns=['date', 'value'])
+
+    df['date'] = df['date'].str[:10]
+    #df['date'] = pd.to_datetime(df['date'])
+
+
+    #df = df.groupby('date')
+
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Group by 'date' and apply sum to 'nvalue'
+    result = df.groupby(df['date'].dt.to_period('M'))['value'].sum() / 100
+
+    print(result)
+
+    """sns.set_style("whitegrid")
+
+    plt.figure(figsize=(14, 7))
+    sns.barplot(x="date", y="value", data=df)#, color='lightblue')
+    plt.title("Bar Plot of Country Values", fontsize=16)
+    plt.xlabel("Countries", fontsize=14)
+    plt.ylabel("Values", fontsize=14)
+    plt.xticks(rotation=45, fontsize=12)
+    plt.yticks(fontsize=12)"""
+
+    #plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
+
+    """plt.grid(axis="y", linestyle="-")
+    plt.show()
+    """
+
+time_sales()
