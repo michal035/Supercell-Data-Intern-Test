@@ -8,6 +8,16 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ListedColormap
 
 
+def get_country_name(country_code):
+    try:
+        country = pycountry.countries.get(alpha_2=country_code).alpha_3
+        if country:
+            return country.name
+        else:
+            return "Country code not found"
+    except Exception as e:
+        return str(e)
+
 
 def sales_by_country():
     res = getData.geographic_split_of_revenue()
@@ -43,12 +53,9 @@ def sales_by_country():
 
     # ax.set_ylabel('Users', fontsize=14, labelpad=15)
 
-    #plt.savefig(f"graphs/Sales/revenue_split.png")
+    # plt.savefig(f"graphs/Sales/revenue_split.png")
 
     plt.show()
-
-
-
 
 
 def convert_to_iso_a3(country_code):
@@ -68,9 +75,7 @@ def Sales_by_country_map():
     df['iso_a3'] = df['iso_a3'].apply(convert_to_iso_a3)
     df = df.sort_values("Revenue (USD)")
 
-    
     merge = world.merge(df, on='iso_a3')
-    
 
     """country_codes = getData.country_codes()
     df_country_codes = pd.DataFrame(country_codes, columns=["iso_a3"])
@@ -78,8 +83,8 @@ def Sales_by_country_map():
     df_country_codes['Revenue (USD)'] = 0.25
     df = df.combine_first(df_country_codes)"""
 
-    #cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
-    #Oranges, OrRD
+    # cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
+    # Oranges, OrRD
     cmap = "Reds"
     # colors = [ 'indianred', 'darkred']
     # cmap = ListedColormap(colors)
@@ -90,11 +95,9 @@ def Sales_by_country_map():
     # merge.loc[merge['Revenue (USD)'] == 0.25, 'color'] = 'grey'
 
     plt.title('Revenue split accros Markets (USD)', fontsize=17)
-    
-    #plt.savefig(f"graphs/Sales/revenue_split_map.png")
+
+    # plt.savefig(f"graphs/Sales/revenue_split_map.png")
     plt.show()
-
-
 
 
 def average_per_user_per_country_map():
@@ -109,8 +112,6 @@ def average_per_user_per_country_map():
 
     merged_df["Average"] = round(
         merged_df["Accounts sum"] / merged_df["Account count"], 2)
-    
-
 
     world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
@@ -118,22 +119,19 @@ def average_per_user_per_country_map():
     merged_df['iso_a3'] = merged_df['iso_a3'].apply(convert_to_iso_a3)
     merged_df = merged_df.sort_values("Average")
 
-    
     merge = world.merge(merged_df, on='iso_a3')
-    
 
     cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
-    #Oranges, OrRD PuRd
+    # Oranges, OrRD PuRd
     cmap = "OrRD"
 
     vmin, vmax = 0, 150
-    merge.plot(column='Average', cmap=cmap, vmin=vmin, vmax=vmax, legend=False, ax=ax)
-
+    merge.plot(column='Average', cmap=cmap, vmin=vmin,
+               vmax=vmax, legend=False, ax=ax)
 
     plt.title('Revenue per User per Market', fontsize=17)
-    #plt.savefig(f"graphs/Sales/revenue_per_user_map.png")
+    # plt.savefig(f"graphs/Sales/revenue_per_user_map.png")
     plt.show()
-
 
 
 def average_per_user_per_country():
@@ -141,7 +139,7 @@ def average_per_user_per_country():
     df = pd.DataFrame(res_count, columns=["iso_a3", "Account count"])
     df2 = pd.DataFrame(res_sum, columns=["iso_a3", "Accounts sum"])
 
-    merged_df = pd.merge(df, df2, on="iso_a3", how="right")
+    merged_df = pd.merge(df, df2, on="iso_a3", how="left")
 
     merged_df = merged_df.fillna(0)
 
@@ -149,13 +147,14 @@ def average_per_user_per_country():
     merged_df["Average"] = round(
         merged_df["Accounts sum"] / merged_df["Account count"], 2)
 
-
-        
-    merged_df = merged_df.sort_values("Average")
+    merged_df = merged_df.sort_values("Average", ascending=False)
+    merged_df = merged_df.head(20)
+    merged_df["iso_a3"] = merged_df.apply(get_country_name)
     print(merged_df)
 
     plt.figure(figsize=(14, 7))
-    sns.barplot(x="iso_a3", y="Average", data=merged_df, color='moccasin')
+    sns.barplot(x="Average", y="iso_a3", data=merged_df,
+                color='#ffa73b')  # moccasin
     plt.title("Revenue per User per Country", fontsize=17)
     plt.xlabel("Countries", fontsize=14)
     plt.ylabel("Average Revenue per User (USD)", fontsize=14)
@@ -165,10 +164,8 @@ def average_per_user_per_country():
     plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
 
     plt.grid(axis="y", linestyle="-")
-    #plt.savefig(f"graphs/Sales/average_per_country_per_user_bar_plot.png")
+    # plt.savefig(f"graphs/Sales/average_per_country_per_user_bar_plot_3.png")
     plt.show()
-
-
 
 
 def split_of_user_per_country_map():
@@ -179,23 +176,19 @@ def split_of_user_per_country_map():
 
     fig, ax = plt.subplots(figsize=(16, 8))
     df['iso_a3'] = df['iso_a3'].apply(convert_to_iso_a3)
-    
+
     merge = world.merge(df, on='iso_a3')
-    
 
     cmap = LinearSegmentedColormap.from_list("", ["lightblue", "darkred"])
-    #Oranges, OrRd PuRd
+    # Oranges, OrRd PuRd
     cmap = "PuRd"
 
     merge.plot(column='Account count', cmap=cmap, legend=True, ax=ax)
 
-
     plt.title('Geographic split of Users', fontsize=17)
 
-    #plt.savefig(f"graphs/Sales/geographic_split_of_user_map.png")
+    # plt.savefig(f"graphs/Sales/geographic_split_of_user_map.png")
     plt.show()
-
-
 
 
 def average_per_country():
@@ -219,18 +212,16 @@ def average_per_country():
     plt.show()
 
 
-
 def time_sales():
 
     res = getData.time_sales()
-    
+
     df = pd.DataFrame(res, columns=['date', 'value'])
 
     df['date'] = df['date'].str[:10]
-    #df['date'] = pd.to_datetime(df['date'])
+    # df['date'] = pd.to_datetime(df['date'])
 
-
-    #df = df.groupby('date')
+    # df = df.groupby('date')
 
     df['date'] = pd.to_datetime(df['date'])
 
@@ -249,10 +240,11 @@ def time_sales():
     plt.xticks(rotation=45, fontsize=12)
     plt.yticks(fontsize=12)"""
 
-    #plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
+    # plt.gca().get_yaxis().get_major_formatter().set_scientific(False)
 
     """plt.grid(axis="y", linestyle="-")
     plt.show()
     """
 
-time_sales()
+
+average_per_user_per_country()

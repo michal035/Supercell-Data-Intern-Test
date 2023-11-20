@@ -8,12 +8,12 @@ import getData
 
 
 def DAU_plot() -> None:
-    res = getData.DAU_by_country("CN")
+    """res = getData.DAU_by_country("CN")
     df = pd.DataFrame(res, columns=["Date", "Users"])
-    df["Date"] = pd.to_datetime(df["Date"])
+    df["Date"] = pd.to_datetime(df["Date"])"""
 
 
-    res2 =  getData.DAU_by_country("US") #getData.DAU()
+    res2 = getData.DAU_by_country("C") #getData.DAU() 
     df2 = pd.DataFrame(res2, columns=["Date", "Users"])
     df2["Date"] = pd.to_datetime(df2["Date"])
 
@@ -23,7 +23,7 @@ def DAU_plot() -> None:
     plt.figure(figsize=(16, 8))
 
     ax = sns.lineplot(data=df2, x="Date", y="Users", color=(0, 0, 0.5), label='Global DAU')
-    sns.lineplot(data=df, x="Date", y="Users", color=(0.5, 0, 0), label='China DAU')
+    #sns.lineplot(data=df, x="Date", y="Users", color=(0.5, 0, 0), label='China DAU')
 
 
 
@@ -42,20 +42,19 @@ def DAU_plot() -> None:
     #plt.savefig(f"graphs/DAU/whole_year_for_china_and_world.png")
     plt.show()
 
-DAU_plot()
-
 
 
 
 def DAU_plot2() -> None:
-    #res = getData.DAU_by_country("CN")
-    #df = pd.DataFrame(res, columns=["Date", "Users"])
-    #df["Date"] = pd.to_datetime(df["Date"])
+    res = getData.DAU_by_country("IN")
+    df = pd.DataFrame(res, columns=["Date", "Users"])
+    df["Date"] = pd.to_datetime(df["Date"])
 
 
     #res2 = getData.DAU()
-    #df2 = pd.DataFrame(res2, columns=["Date", "Users"])
-    #df2["Date"] = pd.to_datetime(df2["Date"])
+    res2 = getData.DAU_by_country("TR")
+    df2 = pd.DataFrame(res2, columns=["Date", "Users"])
+    df2["Date"] = pd.to_datetime(df2["Date"])
 
 
 
@@ -66,44 +65,44 @@ def DAU_plot2() -> None:
     res3 = getData.DAU_by_country("FR")
     df3 = pd.DataFrame(res3, columns=["Date", "Users"])
     df3["Date"] = pd.to_datetime(df3["Date"])
-    df3 = df3[df3["Date"].dt.month.isin(months)]
+    #df3 = df3[df3["Date"].dt.month.isin(months)]
 
     res4 = getData.DAU_by_country("RU")
     df4 = pd.DataFrame(res4, columns=["Date", "Users"])
     df4["Date"] = pd.to_datetime(df4["Date"])
-    df4 = df4[df4["Date"].dt.month.isin(months)]
+    #df4 = df4[df4["Date"].dt.month.isin(months)]
 
     res5 = getData.DAU_by_country("KR")
     df5 = pd.DataFrame(res5, columns=["Date", "Users"])
     df5["Date"] = pd.to_datetime(df5["Date"])
-    df5 = df5[df5["Date"].dt.month.isin(months)]
+    #df5 = df5[df5["Date"].dt.month.isin(months)]
 
 
     sns.set(style="whitegrid")
     plt.figure(figsize=(16, 8))
 
-    #ax = sns.lineplot(data=df2, x="Date", y="Users", color=(0, 0, 0.5), label='Global DAU')
-    #sns.lineplot(data=df, x="Date", y="Users", color=(0.5, 0, 0), label='China DAU')
-    ax = sns.lineplot(data=df3, x="Date", y="Users", color=(0, 0, 0.5), label='France DAU')
-    sns.lineplot(data=df4, x="Date", y="Users", color=(0.5, 0, 0), label='Russia DAU')
+    ax = sns.lineplot(data=df2, x="Date", y="Users", color=(0, 0, 0.5), label='Turkey DAU')
+    sns.lineplot(data=df, x="Date", y="Users", color=(0.5, 0, 0), label='India DAU')
+    sns.lineplot(data=df3, x="Date", y="Users", color=(0, 0, 0.5), label='France DAU')
+    sns.lineplot(data=df4, x="Date", y="Users", color=(0.5, 0.5, 0), label='Russia DAU')
     sns.lineplot(data=df5, x="Date", y="Users", color=(0.5, 0, 0.5), label='South Korea DAU')
 
     
 
 
     plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
-    plt.gca().xaxis.set_major_formatter(" ")#mdates.DateFormatter("%Y-%m-%d"))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))#mdates.DateFormatter("%Y-%m-%d"))
 
     plt.xticks(rotation=45)
 
     #plt.title("Daily active users in ... and Word")
-    ax.set_title("Daily active users in France, Russia and South Korea for March", fontsize=17)
+    ax.set_title("DAU in Turkey, India, France, Russia, and South Korea throughout March", fontsize=17)
     plt.xlabel(" ", fontsize=12, labelpad=50)
     plt.ylabel("Active users", fontsize=12, labelpad=10)
 
             #ax.set_ylabel('Users', fontsize=14, labelpad=15) 
 
-    plt.savefig(f"graphs/DAU/Russia and South Korea for March.png")
+    #plt.savefig(f"graphs/DAU/countries for March.png")
     plt.show()
 
 
@@ -149,4 +148,6 @@ def DAU_plot3() -> None:
     #plt.savefig(f"v1/graphs/whole_year_for_china_and_world.png")
     plt.show()
 
+
+DAU_plot2()
 

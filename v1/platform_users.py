@@ -41,7 +41,7 @@ def DAU_plot() -> None:
 
     plt.title('Geographic split of iOS user', fontsize=17)
 
-    plt.savefig(f"graphs/geographic_split_of_ios_users_map.png")
+    #plt.savefig(f"graphs/geographic_split_of_ios_users_map.png")
     plt.show()
 
 
