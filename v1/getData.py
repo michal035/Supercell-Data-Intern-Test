@@ -21,6 +21,7 @@ with sqlite3.connect(DB) as conn:
 
     def DAU() -> list:
 
+        # ORDER BY count(account_id) DESC
         cursor.execute('''SELECT date, count(account_id)  FROM account_date_session 
                     GROUP BY date 
                     ORDER BY date DESC
@@ -31,6 +32,8 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
+
+    # Sales thing
 
     def geographic_split_of_revenue() -> list:
         cursor.execute('''select acc.country_code, (sum(pur.iap_price_usd_cents)/100) AS total_by_country from iap_purchase pur
@@ -137,6 +140,7 @@ with sqlite3.connect(DB) as conn:
         result = cursor.fetchall()
 
         return result
+    
 
     def get_platform_data():
         cursor.execute('''SELECT country_code, count(created_platform) from account
@@ -150,17 +154,25 @@ with sqlite3.connect(DB) as conn:
                 group by country_code
                        
                        ''')
-
+        
         conn.commit()
         iOS = cursor.fetchall()
+
 
         cursor.execute('''SELECT country_code, count(created_platform) from account
                        where created_platform = 'Android'
                 group by country_code
                        
                        ''')
-
+        
         conn.commit()
         Android = cursor.fetchall()
 
-        return all, iOS, Android
+
+        return all,iOS,Android
+
+
+     
+
+
+

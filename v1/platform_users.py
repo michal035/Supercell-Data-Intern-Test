@@ -24,7 +24,8 @@ def DAU_plot() -> None:
     df = df.merge(ios, on="iso_a3")
     df = df.merge(an, on="iso_a3")
     df["An"] = df["An"] * (-1)
-    df["balance"] = (df["Users_iOS"] / df["Users"])*100
+    df["balance"] = (df["Users_iOS"]/ df["Users"])*100
+
 
     world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
@@ -40,7 +41,7 @@ def DAU_plot() -> None:
 
     plt.title('Geographic split of iOS user', fontsize=17)
 
-    # plt.savefig(f"graphs/geographic_split_of_ios_users_map.png")
+    #plt.savefig(f"graphs/geographic_split_of_ios_users_map.png")
     plt.show()
 
 
